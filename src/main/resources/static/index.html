@@ -45,6 +45,14 @@
                 </div>
 
                 <form id="loginForm" class="needs-validation" novalidate>
+                    <!-- Error Alert -->
+                    <div id="loginError" class="alert alert-danger border-0 rounded-4 p-3 mb-4 d-none">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-circle me-3 h4 mb-0"></i>
+                            <div id="errorMessage">Invalid email or password. Please try again.</div>
+                        </div>
+                    </div>
+
                     <div class="mb-4">
                         <label class="form-label small fw-bold text-muted text-uppercase mb-2 ls-1">Email
                             Address</label>
@@ -111,6 +119,10 @@
 
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
+            const errorAlert = document.getElementById('loginError');
+            const errorText = document.getElementById('errorMessage');
+            errorAlert.classList.add('d-none');
+
             if (this.checkValidity()) {
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
@@ -126,30 +138,28 @@
                     body: JSON.stringify({ email, password })
                 })
                     .then(async response => {
+                        const data = await response.json();
                         if (response.ok) {
-                            const user = await response.json();
-                            localStorage.setItem('hospitalUser', JSON.stringify(user));
+                            localStorage.setItem('hospitalUser', JSON.stringify(data));
 
-                            // Add entrance animation for dashboard
                             submitBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Access Granted';
-                            submitBtn.className = "btn btn-success w-100 py-3 fw-bold";
+                            submitBtn.className = "btn btn-success w-100 py-3 fw-bold shadow-sm";
 
                             setTimeout(() => {
-                                if (user.role === 'DOCTOR') {
-                                    window.location.href = 'doctor-dashboard.html';
-                                } else if (user.role === 'ADMIN') {
-                                    window.location.href = 'admin-dashboard.html';
-                                } else {
-                                    window.location.href = 'dashboard.html';
-                                }
+                                if (data.role === 'DOCTOR') window.location.href = 'doctor-dashboard.html';
+                                else if (data.role === 'ADMIN') window.location.href = 'admin-dashboard.html';
+                                else window.location.href = 'dashboard.html';
                             }, 800);
                         } else {
-                            const error = await response.text();
-                            throw new Error(error || 'Invalid credentials');
+                            throw new Error(data.message || 'Invalid credentials');
                         }
                     })
                     .catch(error => {
-                        alert('Login failed: ' + error.message);
+                        console.error('Login error:', error);
+                        errorText.innerText = error.message === 'Failed to fetch'
+                            ? 'Server unavailable. Please try again later.'
+                            : error.message;
+                        errorAlert.classList.remove('d-none');
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalText;
                     });
