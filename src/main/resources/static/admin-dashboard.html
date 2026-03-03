@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | SmartQueue Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .sidebar {
+            background: #fff;
+            border-right: 1px solid #e2e8f0;
+            width: 300px;
+        }
+
+        .nav-link {
+            border-radius: 12px;
+            margin: 5px 20px;
+            padding: 12px 20px;
+            transition: 0.3s;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .nav-link.active {
+            background: rgba(0, 97, 255, 0.08);
+            color: #0061ff !important;
+            border-left: 4px solid #0061ff;
+            border-radius: 4px 12px 12px 4px;
+            font-weight: 700;
+        }
+
+        .nav-link:hover:not(.active) {
+            background: #f1f5f9;
+            color: #0061ff;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 50px;
+        }
+
+        .stat-card-premium {
+            background: #fff;
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid #f1f5f9;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card-premium:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .premium-table {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            border: 1px solid #f1f5f9;
+        }
+
+        .premium-table th {
+            background: #fcfcfd;
+            padding: 20px;
+            font-size: 13px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: none;
+        }
+
+        .premium-table td {
+            padding: 20px;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .btn-action {
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-action-primary {
+            background: #0061ff;
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 97, 255, 0.2);
+        }
+
+        .btn-action-primary:hover {
+            background: #0056e0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 97, 255, 0.3);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar d-none d-lg-block position-fixed h-100">
+        <div class="p-5 mb-4">
+            <h3 class="fw-800 text-primary mb-0"><i class="fas fa-shield-virus me-2"></i>AdminPanel</h3>
+        </div>
+        <nav class="nav flex-column" id="adminSidebar">
+            <a class="nav-link active" href="#" data-section="overview-section"><i class="fas fa-grid-2-large me-3"></i>
+                System Overview</a>
+            <a class="nav-link" href="#" data-section="analytics-section"><i class="fas fa-chart-mixed me-3"></i> Core
+                Analytics</a>
+            <a class="nav-link" href="#" data-section="settings-section"><i class="fas fa-sliders me-3"></i> Hospital
+                Settings</a>
+            <div style="position: absolute; bottom: 40px; width: 100%;" class="px-2">
+                <a class="nav-link text-danger" href="index.html" onclick="localStorage.removeItem('hospitalUser')">
+                    <i class="fas fa-power-off me-3"></i> Logout Account
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Overview Section -->
+        <div id="overview-section" class="admin-section">
+            <div class="admin-header">
+                <div>
+                    <h1 class="fw-800 mb-2">Hospital Command</h1>
+                    <p class="text-muted mb-0">Live monitoring systems active across all 12 wards.</p>
+                </div>
+                <div class="d-flex align-items-center gap-3 bg-white p-3 rounded-pill shadow-sm">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0061ff&color=fff" class="rounded-circle"
+                        width="40">
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 10px;">AUTHORIZED ADMIN</small>
+                        <span class="fw-bold">Security Core</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="stat-card-premium">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="stat-icon bg-primary bg-opacity-10 text-primary"><i
+                                    class="fas fa-user-doctor"></i></div>
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill">+2 Today</span>
+                        </div>
+                        <h2 class="fw-800 mb-1" id="totalDoctors">0</h2>
+                        <p class="text-muted small fw-bold mb-0">TOTAL DOCTORS</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card-premium">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="stat-icon bg-info bg-opacity-10 text-info"><i class="fas fa-hospital"></i></div>
+                            <span class="badge bg-info bg-opacity-10 text-info rounded-pill">Active</span>
+                        </div>
+                        <h2 class="fw-800 mb-1" id="totalDepts">0</h2>
+                        <p class="text-muted small fw-bold mb-0">WARDS / DEPTS</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card-premium">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="stat-icon bg-warning bg-opacity-10 text-warning"><i
+                                    class="fas fa-user-clock"></i></div>
+                            <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">Peak</span>
+                        </div>
+                        <h2 class="fw-800 mb-1" id="totalWaiting">0</h2>
+                        <p class="text-muted small fw-bold mb-0">WAITING NOW</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card-premium">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div class="stat-icon bg-success bg-opacity-10 text-success"><i
+                                    class="fas fa-microchip"></i></div>
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill">99.9%</span>
+                        </div>
+                        <h2 class="fw-800 mb-1">LIVE</h2>
+                        <p class="text-muted small fw-bold mb-0">SYSTEM STATUS</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-table p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 p-2">
+                    <h4 class="fw-800 mb-0">Active Consultation Desks</h4>
+                    <button class="btn btn-action btn-action-primary"><i class="fas fa-plus me-2"></i>Add New
+                        Desk</button>
+                </div>
+                <div class="row g-4" id="doctorAccessList">
+                    <div class="col-12 text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analytics-section" class="admin-section d-none">
+            <div class="mb-5 animate-up">
+                <h1 class="fw-800 mb-1">Operational Intel</h1>
+                <p class="text-muted">High-fidelity visualization of hospital queue dynamics.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="premium-table p-5">
+                        <h5 class="fw-bold mb-4">Hourly Patient Flow</h5>
+                        <div style="height: 350px;"><canvas id="queueChart"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="premium-table p-5">
+                        <h5 class="fw-bold mb-4">Resource Allocation</h5>
+                        <div style="height: 350px;"><canvas id="deptChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings-section" class="admin-section d-none">
+            <div class="mb-5">
+                <h1 class="fw-800 mb-1">Global Configuration</h1>
+                <p class="text-muted">Master settings for hospital-wide system behavior.</p>
+            </div>
+            <div class="premium-table p-5">
+                <form id="settingsForm">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small">FACILITY NAME</label>
+                            <input type="text" class="form-control bg-light border-0 py-3 rounded-4"
+                                value="SmartQueue Medical Center">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small">ADMIN CONTACT</label>
+                            <input type="email" class="form-control bg-light border-0 py-3 rounded-4"
+                                value="admin@smartqueue.com">
+                        </div>
+                        <div class="col-12 mt-5">
+                            <button type="submit" class="btn btn-action btn-action-primary px-5 py-3">Save Final
+                                Configuration</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bridge Modal -->
+    <div class="modal fade" id="doctorBridgeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-5 shadow-lg">
+                <div class="modal-body p-5">
+                    <div class="text-center mb-5">
+                        <div class="bg-primary bg-opacity-10 d-inline-block p-4 rounded-circle mb-3"><i
+                                class="fas fa-unlock-keyhole text-primary h2 mb-0"></i></div>
+                        <h3 class="fw-800">Secure Desk Access</h3>
+                        <p class="text-muted">Enter verification for <span id="modalDoctorName"
+                                class="fw-bold text-primary">--</span></p>
+                    </div>
+                    <form id="bridgeLoginForm">
+                        <input type="hidden" id="modalDoctorEmail">
+                        <div class="mb-4">
+                            <input type="password" class="form-control bg-light border-0 py-4 rounded-4"
+                                id="bridgePassword" placeholder="Authorization Code" required>
+                        </div>
+                        <button type="submit" class="btn btn-action btn-action-primary w-100 py-4">Authorize &
+                            Synchronize</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedUser = JSON.parse(localStorage.getItem('hospitalUser'));
+            if (!savedUser || savedUser.role !== 'ADMIN') { window.location.href = 'index.html'; return; }
+
+            document.querySelectorAll('#adminSidebar .nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (link.classList.contains('text-danger')) return;
+                    e.preventDefault();
+                    document.querySelectorAll('#adminSidebar .nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    const sectionId = link.getAttribute('data-section');
+                    document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('d-none'));
+                    document.getElementById(sectionId).classList.remove('d-none');
+                    if (sectionId === 'analytics-section') initCharts();
+                });
+            });
+
+            loadStats(); loadDoctors(); setInterval(loadStats, 30000);
+
+            function loadStats() {
+                fetch('/api/hospital/stats').then(res => res.json()).then(stats => {
+                    document.getElementById('totalDoctors').innerText = stats.totalDoctors;
+                    document.getElementById('totalDepts').innerText = stats.totalDepts;
+                    document.getElementById('totalWaiting').innerText = stats.totalWaiting;
+                });
+            }
+
+            function loadDoctors() {
+                fetch('/api/hospital/live-overview').then(res => res.json()).then(doctors => {
+                    const list = document.getElementById('doctorAccessList');
+                    list.innerHTML = doctors.map(doc => `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="stat-card-premium h-100">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 me-3 text-primary"><i class="fas fa-stethoscope h4 mb-0"></i></div>
+                                    <div><h6 class="fw-800 mb-0">${doc.doctorName}</h6><small class="text-muted">${doc.specialization}</small></div>
+                                </div>
+                                <div class="row g-0 bg-light rounded-4 mb-4 p-3 text-center">
+                                    <div class="col-6 border-end"><small class="text-muted d-block fw-bold" style="font-size: 9px;">WAITING</small><span class="fw-800 text-warning">${doc.waitingCount}</span></div>
+                                    <div class="col-6"><small class="text-muted d-block fw-bold" style="font-size: 9px;">LIVE TOKEN</small><span class="fw-800 text-success">#${doc.servingToken || '--'}</span></div>
+                                </div>
+                                <button class="btn btn-action btn-action-primary w-100" onclick="openDoctorBridge('${doc.doctorName}', '${doc.doctorName.toLowerCase().replace('dr. ', '').replace(' ', '')}@example.com')">Synchronize Desk</button>
+                            </div>
+                        </div>`).join('');
+                });
+            }
+
+            const bridgeModal = new bootstrap.Modal(document.getElementById('doctorBridgeModal'));
+            window.openDoctorBridge = function (name, email) {
+                document.getElementById('modalDoctorName').innerText = name;
+                document.getElementById('modalDoctorEmail').value = email;
+                bridgeModal.show();
+            };
+
+            document.getElementById('bridgeLoginForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const email = document.getElementById('modalDoctorEmail').value;
+                const password = document.getElementById('bridgePassword').value;
+                fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) })
+                    .then(res => res.json()).then(user => {
+                        if (user.role === 'DOCTOR') { localStorage.setItem('hospitalUser', JSON.stringify(user)); window.location.href = 'doctor-dashboard.html'; }
+                        else { alert('Unauthorized Access Signature'); }
+                    });
+            });
+
+            function initCharts() {
+                new Chart(document.getElementById('queueChart'), { type: 'line', data: { labels: ['8A', '10A', '12P', '2P', '4P', '6P'], datasets: [{ label: 'Patients', data: [12, 19, 32, 28, 45, 10], borderColor: '#0061ff', tension: 0.4, fill: true, backgroundColor: 'rgba(0,97,255,0.05)' }] } });
+                new Chart(document.getElementById('deptChart'), { type: 'doughnut', data: { labels: ['Cardio', 'Pedia', 'OPD'], datasets: [{ data: [40, 25, 35], backgroundColor: ['#0061ff', '#00d2ff', '#e2e8f0'] }] }, options: { cutout: '75%' } });
+            }
+        });
+    </script>
+</body>
+
+</html>

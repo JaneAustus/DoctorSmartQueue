@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SmartQueue Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="registration-container d-flex align-items-center justify-content-center min-vh-100">
+        <div class="registration-card overflow-hidden shadow-lg d-flex flex-column flex-lg-row animate-up"
+            style="max-width: 900px; border-radius: 30px;">
+            <!-- Info Section -->
+            <div class="registration-info d-none d-lg-flex flex-column justify-content-center text-white p-5"
+                style="background: var(--medical-gradient) !important; width: 45%;">
+                <h1 class="fw-800 mb-4">Focus on your health, not the queue.</h1>
+                <p class="opacity-75 lead mb-5">Join our digital healthcare network and skip long waiting hours with
+                    real-time tracking.</p>
+                <div class="mt-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-white bg-opacity-20 p-3 rounded-circle me-3"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Live Tracking</h6><small class="opacity-75">Know your exact
+                                position</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="p-5 bg-white flex-grow-1">
+                <div class="text-center mb-5">
+                    <div class="bg-primary bg-opacity-10 d-inline-block p-4 rounded-circle mb-4">
+                        <i class="fas fa-hand-holding-medical text-primary display-6"></i>
+                    </div>
+                    <h2 class="fw-800 mb-1">Welcome Back</h2>
+                    <p class="text-muted">Enter your details to access your portal</p>
+                </div>
+
+                <form id="loginForm" class="needs-validation" novalidate>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted text-uppercase mb-2 ls-1">Email
+                            Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i
+                                    class="far fa-envelope text-muted"></i></span>
+                            <input type="email" class="form-control bg-light border-0" id="email"
+                                placeholder="name@example.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <label class="form-label small fw-bold text-muted text-uppercase ls-1">Password</label>
+                            <a href="#" class="text-primary small text-decoration-none fw-bold">Forgot?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i
+                                    class="fas fa-lock text-muted"></i></span>
+                            <input type="password" class="form-control bg-light border-0" id="password" required>
+                        </div>
+                    </div>
+
+                    <!-- Role Selection Helper for Testing -->
+                    <div class="mb-4">
+                        <label
+                            class="form-label small fw-bold text-muted text-uppercase mb-3 ls-1 d-block text-center">Select
+                            Portal to Enter</label>
+                        <div class="d-flex justify-content-between gap-2">
+                            <button type="button" class="btn btn-outline-primary btn-sm flex-grow-1 py-2 role-btn"
+                                data-role="patient" onclick="setCredentials('test@example.com', 'password123')">
+                                <i class="fas fa-user-injured d-block mb-1"></i> Patient
+                            </button>
+                            <button type="button" class="btn btn-outline-info btn-sm flex-grow-1 py-2 role-btn"
+                                data-role="doctor" onclick="setCredentials('doctor@example.com', 'doctor123')">
+                                <i class="fas fa-user-doctor d-block mb-1"></i> Doctor
+                            </button>
+                            <button type="button" class="btn btn-outline-dark btn-sm flex-grow-1 py-2 role-btn"
+                                data-role="admin" onclick="setCredentials('admin@example.com', 'admin123')">
+                                <i class="fas fa-user-shield d-block mb-1"></i> Admin
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">Sign In to
+                            Dashboard</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-5">
+                    <p class="text-muted mb-0">New to our platform? <a href="register.html"
+                            class="text-primary fw-bold text-decoration-none">Create Account</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function setCredentials(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Authenticating...';
+
+                fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                })
+                    .then(async response => {
+                        if (response.ok) {
+                            const user = await response.json();
+                            localStorage.setItem('hospitalUser', JSON.stringify(user));
+
+                            // Add entrance animation for dashboard
+                            submitBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Access Granted';
+                            submitBtn.className = "btn btn-success w-100 py-3 fw-bold";
+
+                            setTimeout(() => {
+                                if (user.role === 'DOCTOR') {
+                                    window.location.href = 'doctor-dashboard.html';
+                                } else if (user.role === 'ADMIN') {
+                                    window.location.href = 'admin-dashboard.html';
+                                } else {
+                                    window.location.href = 'dashboard.html';
+                                }
+                            }, 800);
+                        } else {
+                            const error = await response.text();
+                            throw new Error(error || 'Invalid credentials');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Login failed: ' + error.message);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    });
+            }
+            this.classList.add('was-validated');
+        });
+    </script>
+</body>
+
+</html>

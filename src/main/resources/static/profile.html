@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | SmartQueue</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar d-none d-lg-block">
+        <div class="p-4 mb-4">
+            <h4 class="mb-0"><i class="fas fa-stethoscope me-2"></i>SmartQueue</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html"><i class="fas fa-grid-2 me-2"></i> Dashboard</a>
+            <a class="nav-link" href="appointments.html"><i class="fas fa-calendar-check me-2"></i> Appointments</a>
+            <a class="nav-link" href="history.html"><i class="fas fa-clock-rotate-left me-2"></i> History</a>
+            <a class="nav-link active" href="profile.html"><i class="fas fa-user-gear me-2"></i> Profile</a>
+            <div style="position: absolute; bottom: 20px; width: 100%;" class="px-2">
+                <a class="nav-link text-danger" href="index.html" onclick="localStorage.removeItem('hospitalUser')">
+                    <i class="fas fa-right-from-bracket me-2"></i> Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="mb-5 animate-up">
+            <h1 class="fw-800 mb-1">My Profile</h1>
+            <p class="text-muted">Manage your personal information and health preferences.</p>
+        </div>
+
+        <div class="row g-4 animate-up" style="animation-delay: 0.1s;">
+            <div class="col-lg-4">
+                <div class="card p-4 text-center">
+                    <div class="position-relative d-inline-block mx-auto mb-4">
+                        <img id="profilePic"
+                            src="https://ui-avatars.com/api/?name=User&background=4facfe&color=fff&size=120"
+                            class="rounded-circle border border-4 border-white shadow-sm" width="120" alt="Avatar">
+                        <span
+                            class="position-absolute bottom-0 end-0 bg-primary text-white p-2 rounded-circle shadow-sm"
+                            style="cursor: pointer;">
+                            <i class="fas fa-camera small"></i>
+                        </span>
+                    </div>
+                    <h4 class="fw-800 mb-1" id="profName">-</h4>
+                    <p class="text-muted mb-4" id="profEmail">-</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <span
+                            class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold">Verified
+                            Patient</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Personal Details</h5>
+                        <button class="btn btn-light btn-sm"><i class="fas fa-pen-to-square me-2"></i>Edit
+                            Profile</button>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase ls-1">First Name</label>
+                            <div class="p-3 bg-light rounded-3 fw-medium" id="inpFirst">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase ls-1">Last Name</label>
+                            <div class="p-3 bg-light rounded-3 fw-medium" id="inpLast">-</div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label text-muted small fw-bold text-uppercase ls-1">Email Address</label>
+                            <div class="p-3 bg-light rounded-3 fw-medium" id="inpEmail">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase ls-1">Phone Number</label>
+                            <div class="p-3 bg-light rounded-3 fw-medium" id="inpPhone">-</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase ls-1">Priority
+                                Category</label>
+                            <div class="p-3 bg-light rounded-3 fw-medium text-primary" id="profRole">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedUser = JSON.parse(localStorage.getItem('hospitalUser'));
+            if (!savedUser) { window.location.href = 'index.html'; return; }
+
+            document.getElementById('profName').innerText = `${savedUser.firstName} ${savedUser.lastName}`;
+            document.getElementById('profEmail').innerText = savedUser.email;
+            document.getElementById('profRole').innerText = savedUser.role || 'NORMAL';
+            document.getElementById('profilePic').src = `https://ui-avatars.com/api/?name=${savedUser.firstName}+${savedUser.lastName}&background=4facfe&color=fff&size=120`;
+
+            document.getElementById('inpFirst').innerText = savedUser.firstName;
+            document.getElementById('inpLast').innerText = savedUser.lastName;
+            document.getElementById('inpEmail').innerText = savedUser.email;
+            document.getElementById('inpPhone').innerText = savedUser.phone;
+        });
+    </script>
+</body>
+
+</html>

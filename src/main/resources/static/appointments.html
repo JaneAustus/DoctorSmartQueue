@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments | SmartQueue</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar d-none d-lg-block">
+        <div class="p-4 mb-4">
+            <h4 class="mb-0"><i class="fas fa-stethoscope me-2"></i>SmartQueue</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link" href="dashboard.html"><i class="fas fa-grid-2 me-2"></i> Dashboard</a>
+            <a class="nav-link active" href="appointments.html"><i class="fas fa-calendar-check me-2"></i>
+                Appointments</a>
+            <a class="nav-link" href="history.html"><i class="fas fa-clock-rotate-left me-2"></i> History</a>
+            <a class="nav-link" href="profile.html"><i class="fas fa-user-gear me-2"></i> Profile</a>
+            <div style="position: absolute; bottom: 20px; width: 100%;" class="px-2">
+                <a class="nav-link text-danger" href="index.html" onclick="localStorage.removeItem('hospitalUser')">
+                    <i class="fas fa-right-from-bracket me-2"></i> Logout
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="mb-5 animate-up">
+            <h1 class="fw-800 mb-1">Active Tokens</h1>
+            <p class="text-muted">You have <span id="tokenCount" class="fw-bold text-primary">0</span> active
+                appointments.</p>
+        </div>
+
+        <div id="activeTokensList" class="row g-4 animate-up" style="animation-delay: 0.1s;">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+        </div>
+
+        <div id="noAppointments" class="text-center py-5 animate-up" style="display: none;">
+            <div class="bg-white d-inline-block p-5 rounded-circle shadow-sm mb-4">
+                <i class="fas fa-calendar-xmark display-4 text-muted"></i>
+            </div>
+            <h4 class="fw-bold">No Active Tokens Found</h4>
+            <p class="text-muted mb-4">Ready to see a doctor? Join a queue from the dashboard.</p>
+            <a href="dashboard.html" class="btn btn-primary px-5 py-3">Explore Doctors</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedUser = JSON.parse(localStorage.getItem('hospitalUser'));
+            if (!savedUser) { window.location.href = 'index.html'; return; }
+
+            fetch(`/api/queue/patient/${savedUser.id}`)
+                .then(res => res.json())
+                .then(entries => {
+                    const activeEntries = entries.filter(e => e.status === 'WAITING' || e.status === 'IN_PROGRESS');
+                    const list = document.getElementById('activeTokensList');
+                    document.getElementById('tokenCount').innerText = activeEntries.length;
+                    list.innerHTML = '';
+
+                    if (activeEntries.length === 0) {
+                        list.style.display = 'none';
+                        document.getElementById('noAppointments').style.display = 'block';
+                        return;
+                    }
+
+                    activeEntries.forEach(entry => {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-6 col-lg-4';
+                        col.innerHTML = `
+                            <div class="card h-100 overflow-hidden">
+                                <div class="p-4 text-center text-white" style="background: var(--medical-gradient)">
+                                    <h2 class="display-4 fw-800 mb-0">#${entry.queueNumber}</h2>
+                                    <code class="text-white opacity-75 small">${entry.tokenCode}</code>
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <div class="bg-light p-3 rounded-pill me-3 text-primary"><i class="fas fa-user-doctor"></i></div>
+                                        <div><h6 class="fw-bold mb-0">${entry.doctor.name}</h6><small class="text-muted">${entry.doctor.specialization}</small></div>
+                                    </div>
+                                    <div class="mb-4 small">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted text-uppercase fw-bold ls-1" style="font-size: 10px;">Status</span>
+                                            <span class="badge ${entry.status === 'IN_PROGRESS' ? 'bg-primary' : 'bg-warning text-dark'}">${entry.status}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted text-uppercase fw-bold ls-1" style="font-size: 10px;">Priority</span>
+                                            <span class="fw-bold">${entry.priority}</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-primary w-100" onclick="window.location.href='dashboard.html?track=true'">
+                                        <i class="fas fa-location-crosshairs me-2"></i>Track Live
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        list.appendChild(col);
+                    });
+                })
+                .catch(() => {
+                    document.getElementById('activeTokensList').innerHTML = '<div class="col-12 text-center text-danger py-5">System error. Please try again later.</div>';
+                });
+        });
+    </script>
+</body>
+
+</html>
