@@ -90,10 +90,17 @@
             <h3 class="fw-800 text-primary mb-0"><i class="fas fa-stethoscope me-2"></i>SmartQueue</h3>
         </div>
         <nav class="nav flex-column">
-            <a class="nav-link active py-3" href="dashboard.html"><i class="fas fa-grid-2 me-3"></i> Dashboard</a>
-            <a class="nav-link py-3" href="#"><i class="fas fa-calendar-check me-3"></i> My Visits</a>
-            <a class="nav-link py-3" href="#"><i class="fas fa-clock-rotate-left me-3"></i> History</a>
+            <a class="nav-link active py-3" href="dashboard.html"><i class="fas fa-th-large me-3"></i> Dashboard</a>
+            <a class="nav-link py-3" href="appointments.html"><i class="fas fa-calendar-check me-3"></i> My Visits</a>
+            <a class="nav-link py-3" href="history.html"><i class="fas fa-clock-rotate-left me-3"></i> History</a>
+            <a class="nav-link py-3" href="profile.html"><i class="fas fa-user-gear me-3"></i> Profile</a>
             <div style="position: absolute; bottom: 30px; width: 100%;" class="px-2">
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const savedUser = JSON.parse(localStorage.getItem('hospitalUser'));
+                        if (!savedUser || savedUser.role !== 'PATIENT') { window.location.href = 'index.html'; return; }
+                    });
+                </script>
                 <a class="nav-link text-danger" href="index.html" onclick="localStorage.removeItem('hospitalUser')">
                     <i class="fas fa-power-off me-3"></i> Sign Out
                 </a>
@@ -111,8 +118,8 @@
             <div class="d-flex align-items-center bg-white p-2 px-4 rounded-pill shadow-sm">
                 <div class="me-3 text-end"><span class="fw-bold d-block" id="userDisplayId">ID: --</span><small
                         class="text-success fw-bold">Online</small></div>
-                <img src="https://ui-avatars.com/api/?name=Patient&background=0061ff&color=fff" class="rounded-circle"
-                    width="45">
+                <img id="headerProfilePic" src="https://ui-avatars.com/api/?name=Patient&background=0061ff&color=fff"
+                    class="rounded-circle" width="45">
             </div>
         </div>
 
@@ -154,12 +161,20 @@
         </div>
 
         <!-- Search & Grid -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <h4 class="fw-800 mb-0">Join New Queue</h4>
-            <div class="search-bar d-flex align-items-center">
-                <i class="fas fa-search text-muted me-3"></i>
-                <input type="text" id="doctorSearch" class="border-0 bg-transparent"
-                    style="outline: none; width: 250px;" placeholder="Search doctor or specialty...">
+            <div class="d-flex gap-2">
+                <select id="deptFilter" class="form-select border-0 shadow-sm rounded-pill px-4" style="width: auto;">
+                    <option value="ALL">All Departments</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                </select>
+                <div class="search-bar d-flex align-items-center">
+                    <i class="fas fa-search text-muted me-3"></i>
+                    <input type="text" id="doctorSearch" class="border-0 bg-transparent"
+                        style="outline: none; width: 250px;" placeholder="Search doctor or specialty...">
+                </div>
             </div>
         </div>
 
@@ -197,6 +212,22 @@
                                 </div>
                             </div>
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="liveMonitorModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content border-0 rounded-5 shadow">
+                <div class="modal-header border-0 p-4 pb-0">
+                    <h5 class="fw-800 mb-0"><i class="fas fa-radar me-2 text-primary"></i>Live Hospital Overview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="liveOverviewList" class="row g-4">
+                        <!-- Loaded from JS -->
                     </div>
                 </div>
             </div>

@@ -353,7 +353,7 @@
                             const opt = document.createElement('option');
                             opt.value = doc.id;
                             opt.innerText = `${doc.name} (${doc.specialization})`;
-                            if (doc.name.toLowerCase().includes(savedUser.lastName.toLowerCase())) {
+                            if (doc.email === savedUser.email) {
                                 opt.selected = true;
                             }
                             doctorSelect.appendChild(opt);
@@ -415,7 +415,7 @@
                         </td>
                         <td><span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2">WAITING</span></td>
                         <td class="text-end">
-                            <button class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm" onclick="callPatient(${entry.id})">
+                            <button class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm" onclick="callPatient('${entry.id}')">
                                 Call Patient
                             </button>
                         </td>

@@ -1,6 +1,5 @@
 package com.example.SmartQueueManagement.model;
 
-import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.*;
 
 @Getter
@@ -10,7 +9,6 @@ import lombok.*;
 @Builder
 public class Department {
 
-    @DocumentId
     private String id;
 
     private String name;

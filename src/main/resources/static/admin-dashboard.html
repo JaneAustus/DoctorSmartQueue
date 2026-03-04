@@ -324,10 +324,18 @@
                 });
             });
 
+            function getAuthHeaders() {
+                const token = localStorage.getItem('fbIdToken');
+                return {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                };
+            }
+
             loadStats(); loadDoctors(); setInterval(loadStats, 30000);
 
             function loadStats() {
-                fetch('/api/hospital/stats').then(res => res.json()).then(stats => {
+                fetch('/api/hospital/stats', { headers: getAuthHeaders() }).then(res => res.json()).then(stats => {
                     document.getElementById('totalDoctors').innerText = stats.totalDoctors;
                     document.getElementById('totalDepts').innerText = stats.totalDepts;
                     document.getElementById('totalWaiting').innerText = stats.totalWaiting;
@@ -335,7 +343,7 @@
             }
 
             function loadDoctors() {
-                fetch('/api/hospital/live-overview').then(res => res.json()).then(doctors => {
+                fetch('/api/hospital/live-overview', { headers: getAuthHeaders() }).then(res => res.json()).then(doctors => {
                     const list = document.getElementById('doctorAccessList');
                     list.innerHTML = doctors.map(doc => `
                         <div class="col-md-6 col-lg-4">
@@ -348,7 +356,7 @@
                                     <div class="col-6 border-end"><small class="text-muted d-block fw-bold" style="font-size: 9px;">WAITING</small><span class="fw-800 text-warning">${doc.waitingCount}</span></div>
                                     <div class="col-6"><small class="text-muted d-block fw-bold" style="font-size: 9px;">LIVE TOKEN</small><span class="fw-800 text-success">#${doc.servingToken || '--'}</span></div>
                                 </div>
-                                <button class="btn btn-action btn-action-primary w-100" onclick="openDoctorBridge('${doc.doctorName}', '${doc.doctorName.toLowerCase().replace('dr. ', '').replace(' ', '')}@example.com')">Synchronize Desk</button>
+                                <button class="btn btn-action btn-action-primary w-100" onclick="openDoctorBridge('${doc.doctorName}', '${doc.doctorEmail}')">Synchronize Desk</button>
                             </div>
                         </div>`).join('');
                 });
@@ -361,15 +369,30 @@
                 bridgeModal.show();
             };
 
-            document.getElementById('bridgeLoginForm').addEventListener('submit', function (e) {
+            document.getElementById('bridgeLoginForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
                 const email = document.getElementById('modalDoctorEmail').value;
                 const password = document.getElementById('bridgePassword').value;
-                fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) })
-                    .then(res => res.json()).then(user => {
-                        if (user.role === 'DOCTOR') { localStorage.setItem('hospitalUser', JSON.stringify(user)); window.location.href = 'doctor-dashboard.html'; }
-                        else { alert('Unauthorized Access Signature'); }
+                try {
+                    const res = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: getAuthHeaders(),
+                        body: JSON.stringify({ email, password })
                     });
+                    const data = await res.json();
+                    if (res.ok) {
+                        if (data.role === 'DOCTOR') {
+                            localStorage.setItem('hospitalUser', JSON.stringify(data));
+                            window.location.href = 'doctor-dashboard.html';
+                        } else {
+                            alert('Unauthorized Access: Only doctors can synchronize desk.');
+                        }
+                    } else {
+                        alert("Login Failed: " + (data.error || "Invalid credentials"));
+                    }
+                } catch (err) {
+                    alert("System Bridge Error: Cannot reach security service.");
+                }
             });
 
             function initCharts() {

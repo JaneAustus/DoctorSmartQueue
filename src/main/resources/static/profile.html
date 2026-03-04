@@ -20,13 +20,13 @@
             <h4 class="mb-0"><i class="fas fa-stethoscope me-2"></i>SmartQueue</h4>
         </div>
         <nav class="nav flex-column">
-            <a class="nav-link" href="dashboard.html"><i class="fas fa-grid-2 me-2"></i> Dashboard</a>
-            <a class="nav-link" href="appointments.html"><i class="fas fa-calendar-check me-2"></i> Appointments</a>
+            <a class="nav-link" href="dashboard.html"><i class="fas fa-th-large me-2"></i> Dashboard</a>
+            <a class="nav-link" href="appointments.html"><i class="fas fa-calendar-check me-2"></i> My Visits</a>
             <a class="nav-link" href="history.html"><i class="fas fa-clock-rotate-left me-2"></i> History</a>
             <a class="nav-link active" href="profile.html"><i class="fas fa-user-gear me-2"></i> Profile</a>
             <div style="position: absolute; bottom: 20px; width: 100%;" class="px-2">
                 <a class="nav-link text-danger" href="index.html" onclick="localStorage.removeItem('hospitalUser')">
-                    <i class="fas fa-right-from-bracket me-2"></i> Logout
+                    <i class="fas fa-power-off me-2"></i> Sign Out
                 </a>
             </div>
         </nav>
@@ -101,7 +101,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const savedUser = JSON.parse(localStorage.getItem('hospitalUser'));
-            if (!savedUser) { window.location.href = 'index.html'; return; }
+            if (!savedUser || savedUser.role !== 'PATIENT') { window.location.href = 'index.html'; return; }
 
             document.getElementById('profName').innerText = `${savedUser.firstName} ${savedUser.lastName}`;
             document.getElementById('profEmail').innerText = savedUser.email;

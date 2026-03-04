@@ -7,11 +7,21 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentEntry = null;
     let completedCount = 0;
 
+    function getAuthHeaders() {
+        const token = localStorage.getItem('fbIdToken');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        };
+    }
+
     // Load initial doctor list
     loadDoctors();
 
     function loadDoctors() {
-        fetch('/api/hospital/doctors')
+        fetch('/api/hospital/doctors', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(doctors => {
                 doctorSelect.innerHTML = '';
@@ -34,7 +44,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function refreshQueue() {
         const doctorId = doctorSelect.value;
-        fetch(`/api/queue/doctor/${doctorId}`)
+        fetch(`/api/queue/doctor/${doctorId}`, {
+            headers: getAuthHeaders()
+        })
             .then(response => response.json())
             .then(data => {
                 renderQueue(data);
@@ -108,7 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateQueueStatus(entryId, status) {
         fetch(`/api/queue/${entryId}/status?status=${status}`, {
-            method: 'PUT'
+            method: 'PUT',
+            headers: getAuthHeaders()
         })
             .then(response => {
                 if (response.ok) {

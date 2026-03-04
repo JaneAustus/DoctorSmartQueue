@@ -18,13 +18,14 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index.html", "/register.html", "/dashboard.html", "/doctor-dashboard.html",
-                        "/admin-dashboard.html", "/appointments.html", "/history.html", "/profile.html",
-                        "/css/**", "/js/**", "/img/**", "/api/auth/**", "/api/queue/**", "/api/hospital/**",
-                        "/h2-console/**")
+                .antMatchers("/", "/index.html", "/staff-login.html", "/register.html", "/dashboard.html",
+                        "/doctor-dashboard.html",
+                        "/admin-dashboard.html", "/appointments.html", "/history.html", "/profile.html", "/favicon.ico",
+                        "/css/**", "/js/**", "/img/**", "/api/auth/**", "/api/hospital/**", "/api/queue/**")
                 .permitAll()
                 .anyRequest().authenticated()
-                .and().headers().frameOptions().sameOrigin();
+                .and()
+                .headers().frameOptions().sameOrigin();
         return http.build();
     }
 

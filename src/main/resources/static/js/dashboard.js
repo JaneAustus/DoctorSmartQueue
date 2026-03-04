@@ -8,24 +8,54 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    const patientId = savedUser.id;
-    document.getElementById('userName').innerText = savedUser.firstName;
+    const patientId = savedUser.email; // Use email as primary identifier
+    const userNameElement = document.getElementById('userName');
+    if (userNameElement) userNameElement.innerText = savedUser.firstName;
+
+    const userDisplayId = document.getElementById('userDisplayId');
+    if (userDisplayId) userDisplayId.innerText = `ID: ${savedUser.email}`;
+
+    const profRole = document.getElementById('profRole');
+    if (profRole) profRole.innerText = savedUser.role === 'PATIENT' ? 'Verified Patient' : (savedUser.role || 'Regular');
+
     const headerPic = document.getElementById('headerProfilePic');
     if (headerPic) {
         headerPic.src = `https://ui-avatars.com/api/?name=${savedUser.firstName}+${savedUser.lastName}&background=0d6efd&color=fff`;
     }
 
     let liveTrackingInterval = null;
-    let allDoctors = []; // Cache all doctors
+    function getAuthHeaders() {
+        return {
+            'Content-Type': 'application/json'
+        };
+    }
 
+    let allDoctors = [];
     loadDoctors();
+    checkActiveQueue();
+
+    function checkActiveQueue() {
+        fetch(`/api/queue/patient/${patientId}`, {
+            headers: getAuthHeaders()
+        })
+            .then(res => res.json())
+            .then(entries => {
+                const activeEntry = entries.find(e => e.status === 'WAITING' || e.status === 'IN_PROGRESS');
+                if (activeEntry) {
+                    showQueueSuccess(activeEntry, activeEntry.doctorName);
+                }
+            })
+            .catch(err => console.error('Error checking active queue:', err));
+    }
 
     function loadDoctors() {
         const doctorsList = document.getElementById('doctorsList');
         console.log('Fetching doctors from /api/hospital/doctors...');
 
         // Fetch doctors from our API
-        fetch('/api/hospital/doctors')
+        fetch('/api/hospital/doctors', {
+            headers: getAuthHeaders()
+        })
             .then(response => {
                 if (!response.ok) throw new Error('Server returned ' + response.status);
                 return response.json();
@@ -86,8 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const col = document.createElement('div');
         col.className = 'col-md-6 col-xl-4';
 
-        const availabilityClass = doctor.available ? 'bg-success' : 'bg-danger';
-        const availabilityText = doctor.available ? 'Available' : 'Unavailable';
+        const isAvailable = doctor.available !== undefined ? doctor.available : (doctor.isAvailable !== undefined ? doctor.isAvailable : true);
+        const availabilityClass = isAvailable ? 'bg-success' : 'bg-danger';
+        const availabilityText = isAvailable ? 'Available' : 'Unavailable';
+        const deptName = doctor.department ? doctor.department.name : 'General';
 
         col.innerHTML = `
             <div class="card doctor-card shadow-sm h-100">
@@ -102,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="mb-3">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small"><i class="fas fa-hospital-alt me-1"></i> Department:</span>
-                            <span class="small fw-bold">${doctor.department.name}</span>
+                            <span class="small fw-bold">${deptName}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small"><i class="fas fa-door-open me-1"></i> Room:</span>
@@ -116,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <button class="btn btn-outline-primary w-100 fw-bold join-queue-btn" 
                             data-doctor-id="${doctor.id}" 
                             data-doctor-name="${doctor.name}"
-                            ${!doctor.available ? 'disabled' : ''}>
+                            ${!isAvailable ? 'disabled' : ''}>
                         <i class="fas fa-user-plus me-1"></i> Join Queue
                     </button>
                 </div>
@@ -163,8 +195,9 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedButton.disabled = true;
         selectedButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Joining...';
 
-        fetch(`/api/queue/join?patientId=${patientId}&doctorId=${selectedDoctorId}&priority=${priority}`, {
-            method: 'POST'
+        fetch(`/api/queue/join?patientId=${savedUser.email}&doctorId=${selectedDoctorId}&priority=${priority}`, {
+            method: 'POST',
+            headers: getAuthHeaders()
         })
             .then(async response => {
                 if (response.ok) {
@@ -216,7 +249,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function refreshTokenStatus(entryId) {
-        fetch(`/api/queue/${entryId}`)
+        fetch(`/api/queue/${entryId}`, {
+            headers: getAuthHeaders()
+        })
             .then(response => response.json())
             .then(entry => {
                 const waitTimeSpan = document.getElementById('estWaitTime');
@@ -276,7 +311,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function refreshLiveOverview() {
-        fetch('/api/hospital/live-overview')
+        fetch('/api/hospital/live-overview', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(data => {
                 const list = document.getElementById('liveOverviewList');

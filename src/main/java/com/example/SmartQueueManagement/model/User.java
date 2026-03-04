@@ -1,8 +1,7 @@
 package com.example.SmartQueueManagement.model;
 
-import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
 
-    @DocumentId
     private String id;
 
     private String firstName;
@@ -24,5 +22,5 @@ public class User {
     private UserRole role = UserRole.PATIENT;
 
     @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Date createdAt = new Date();
 }
