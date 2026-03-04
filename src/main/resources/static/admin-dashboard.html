@@ -21,7 +21,6 @@
         .sidebar {
             background: #fff;
             border-right: 1px solid #e2e8f0;
-            width: 300px;
         }
 
         .nav-link {
@@ -46,10 +45,7 @@
             color: #0061ff;
         }
 
-        .main-content {
-            margin-left: 300px;
-            padding: 50px;
-        }
+        /* Responsive adjustments for main-content handled in style.css */
 
         .stat-card-premium {
             background: #fff;
@@ -59,6 +55,7 @@
             transition: 0.3s;
             position: relative;
             overflow: hidden;
+            height: 100%;
         }
 
         .stat-card-premium:hover {
@@ -128,12 +125,12 @@
 </head>
 
 <body>
-    <button id="sidebarToggle" class="d-lg-none">
+    <button id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
 
     <!-- Sidebar -->
-    <div class="sidebar d-none d-lg-block position-fixed h-100">
+    <div class="sidebar">
         <div class="p-5 mb-4">
             <h3 class="fw-800 text-primary mb-0"><i class="fas fa-shield-virus me-2"></i>AdminPanel</h3>
         </div>

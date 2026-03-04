@@ -21,12 +21,12 @@
         .sidebar {
             background: #fff;
             border-right: 1px solid #e2e8f0;
-            width: 280px;
         }
 
         .nav-link {
             border-radius: 12px;
             margin: 4px 15px;
+            padding: 12px 20px;
             transition: 0.3s;
             color: #64748b;
             font-weight: 500;
@@ -38,10 +38,7 @@
             font-weight: 600;
         }
 
-        .main-content {
-            margin-left: 280px;
-            padding: 40px;
-        }
+        /* Responsive adjustments for main-content handled in style.css */
 
         .token-card {
             background: linear-gradient(135deg, #0061ff 0%, #60efff 100%);
@@ -59,6 +56,7 @@
             padding: 24px;
             border: 1px solid #f1f5f9;
             transition: 0.3s ease;
+            height: 100%;
         }
 
         .doctor-card:hover {
@@ -79,17 +77,19 @@
             padding: 10px 25px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            width: 100%;
+            max-width: 300px;
         }
     </style>
 </head>
 
 <body>
-    <button id="sidebarToggle" class="d-lg-none">
+    <button id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
 
     <!-- Sidebar -->
-    <div class="sidebar d-none d-lg-block position-fixed h-100">
+    <div class="sidebar">
         <div class="p-4 mb-4 text-center">
             <h3 class="fw-800 text-primary mb-0"><i class="fas fa-stethoscope me-2"></i>SmartQueue</h3>
         </div>

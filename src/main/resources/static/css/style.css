@@ -114,12 +114,11 @@ body {
     background: white;
     color: var(--primary-color);
     border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 15px;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     transition: 0.3s ease;
-    display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
@@ -138,21 +137,21 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
     z-index: 1050;
     opacity: 0;
     transition: opacity 0.4s ease;
 }
 
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
 .sidebar.mobile-show {
     display: block !important;
     transform: translateX(0) !important;
-}
-
-.sidebar.mobile-show+.sidebar-overlay {
-    display: block;
-    opacity: 1;
 }
 
 /* Card Styling */
@@ -167,84 +166,7 @@ body {
     box-shadow: var(--hover-shadow);
 }
 
-.doctor-card {
-    border: 1px solid rgba(0, 0, 0, 0.03);
-}
-
-.doctor-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Buttons */
-.btn-primary {
-    background: var(--medical-gradient);
-    border: none;
-    border-radius: var(--border-radius-md);
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
-    background: var(--medical-gradient);
-}
-
-.btn-outline-primary {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    border-width: 2px;
-    border-radius: var(--border-radius-md);
-    font-weight: 600;
-}
-
-.btn-outline-primary:hover {
-    background: var(--medical-gradient);
-    border-color: transparent;
-}
-
-/* Inputs */
-.form-control,
-.form-select {
-    border-radius: var(--border-radius-md);
-    padding: 0.75rem 1.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-}
-
-.form-control:focus,
-.form-select:focus {
-    box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.15);
-    border-color: var(--primary-color);
-}
-
-/* Badges */
-.badge {
-    padding: 0.6em 1em;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-/* Animations */
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-up {
-    animation: slideUp 0.6s ease-out forwards;
-}
-
-/* Responsive */
+/* Responsive Overrides */
 @media (max-width: 991.98px) {
     .sidebar {
         width: var(--sidebar-width);
@@ -254,16 +176,38 @@ body {
         height: 100vh;
         z-index: 2000;
         border-radius: 0 30px 30px 0;
+        display: block !important;
+        /* Ensure it's ready for translate */
     }
 
     .main-content {
         margin-left: 0 !important;
         padding: 1.25rem;
-        padding-top: 6rem;
+        padding-top: 5rem;
+        width: 100%;
     }
 
     #sidebarToggle {
         display: flex;
+    }
+
+    .admin-header,
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+
+    .doctor-selector {
+        width: 100% !important;
+    }
+
+    .doctor-selector select {
+        width: 100% !important;
+    }
+
+    .display-1 {
+        font-size: 3.5rem;
     }
 
     .registration-info,
@@ -286,6 +230,60 @@ body {
         padding: 0;
         background: white;
     }
+}
+
+@media (max-width: 767.98px) {
+    .card {
+        border-radius: 20px;
+    }
+
+    .p-5 {
+        padding: 1.5rem !important;
+    }
+
+    .p-4 {
+        padding: 1.25rem !important;
+    }
+
+    .display-1 {
+        font-size: 2.5rem;
+    }
+
+    .btn-action,
+    .btn-premium {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .d-flex.gap-3,
+    .d-flex.gap-2 {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .d-flex.gap-3>*,
+    .d-flex.gap-2>* {
+        width: 100%;
+    }
+
+    .token-card {
+        padding: 1.5rem !important;
+    }
+
+    .token-card .border-end {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding-bottom: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .premium-table {
+        border-radius: 15px;
+    }
+
+    .table-responsive {
+        border: none;
+    }
 
     h1 {
         font-size: 1.75rem;
@@ -294,62 +292,29 @@ body {
     h2 {
         font-size: 1.5rem;
     }
+}
 
-    .token-card {
-        padding: 1.5rem !important;
-        border-radius: 25px !important;
-    }
-
-    .border-end {
-        border-right: none !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }
-
-    .admin-header {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 1.5rem;
-    }
-
-    .admin-header .d-flex {
-        width: 100%;
-        justify-content: space-between;
+/* Utility for hidden elements on mobile */
+@media (max-width: 576px) {
+    .hide-mobile {
+        display: none !important;
     }
 }
 
-@media (max-width: 767.98px) {
-    .card {
-        border-radius: 20px;
+/* Section transitions */
+.doc-section,
+.admin-section {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
 
-    .display-1 {
-        font-size: 3rem;
-    }
-
-    .p-5 {
-        padding: 1.25rem !important;
-    }
-
-    .btn-action {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-
-    .d-flex.gap-2,
-    .d-flex.gap-3 {
-        flex-direction: column;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
+    to {
         opacity: 1;
-    }
-}
-
-/* Fix for overlapping cards in grid */
-@media (min-width: 992px) {
-    .sidebar {
-        transform: translateX(0) !important;
-        display: block !important;
+        transform: translateY(0);
     }
 }

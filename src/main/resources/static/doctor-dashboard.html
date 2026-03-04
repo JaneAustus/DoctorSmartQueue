@@ -26,7 +26,9 @@
         .nav-link {
             border-radius: 12px;
             margin: 4px 15px;
+            padding: 12px 20px;
             transition: 0.3s;
+            color: #64748b;
         }
 
         .nav-link.active {
@@ -37,9 +39,7 @@
             font-weight: 700;
         }
 
-        .main-content {
-            padding: 40px;
-        }
+        /* Responsive adjustments for main-content handled in style.css */
 
         .premium-card {
             background: linear-gradient(135deg, #0061ff 0%, #60efff 100%);
@@ -49,6 +49,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0, 97, 255, 0.2);
+            height: 100%;
         }
 
         .premium-card::before {
@@ -84,6 +85,7 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
             overflow: hidden;
+            height: 100%;
         }
 
         .table-premium thead {
@@ -111,6 +113,7 @@
             padding: 24px;
             border: 1px solid #f1f5f9;
             transition: 0.3s;
+            height: 100%;
         }
 
         .stat-card:hover {
@@ -124,25 +127,26 @@
             padding: 10px 20px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            min-width: 250px;
         }
     </style>
 </head>
 
 <body>
-    <button id="sidebarToggle" class="d-lg-none">
+    <button id="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
 
     <!-- Sidebar -->
-    <div class="sidebar d-none d-lg-block">
+    <div class="sidebar">
         <div class="p-4 mb-4">
             <h4 class="fw-800 text-primary mb-0"><i class="fas fa-hand-holding-medical me-2"></i>SmartQueue</h4>
         </div>
         <nav class="nav flex-column" id="doctorSidebar">
             <a class="nav-link active py-3" href="#" data-section="desk-section"><i
                     class="fas fa-laptop-medical me-2"></i> Clinical Desk</a>
-            <a class="nav-link py-3 text-muted" href="#" data-section="analytics-section"><i
-                    class="fas fa-chart-line me-2"></i> Analytics</a>
+            <a class="nav-link py-3" href="#" data-section="analytics-section"><i class="fas fa-chart-line me-2"></i>
+                Analytics</a>
             <div style="position: absolute; bottom: 30px; width: 100%;" class="px-2">
                 <a class="nav-link text-danger" href="index.html" onclick="localStorage.removeItem('hospitalUser')">
                     <i class="fas fa-power-off me-2"></i> Sign Out
