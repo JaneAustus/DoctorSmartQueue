@@ -150,6 +150,8 @@
             </div>
         </nav>
     </div>
+    <div class="sidebar-overlay"></div>
+
 
     <!-- Main Content -->
     <div class="main-content">
@@ -516,12 +518,19 @@
     <script>
         document.getElementById('sidebarToggle').addEventListener('click', function () {
             document.querySelector('.sidebar').classList.toggle('mobile-show');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        });
+
+        document.querySelector('.sidebar-overlay').addEventListener('click', function () {
+            document.querySelector('.sidebar').classList.remove('mobile-show');
+            this.classList.remove('active');
         });
 
         document.querySelectorAll('.sidebar .nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 if (window.innerWidth < 992) {
                     document.querySelector('.sidebar').classList.remove('mobile-show');
+                    document.querySelector('.sidebar-overlay').classList.remove('active');
                 }
             });
         });
