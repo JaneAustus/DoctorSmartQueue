@@ -122,34 +122,37 @@ document.addEventListener('DOMContentLoaded', function () {
         const deptName = doctor.department ? doctor.department.name : 'General';
 
         col.innerHTML = `
-            <div class="card doctor-card shadow-sm h-100">
+            <div class="card doctor-card shadow-sm h-100 border-0">
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=e7f1ff&color=0d6efd" class="rounded-pill me-3" width="60" alt="Doctor">
-                        <div>
-                            <h5 class="fw-bold mb-0">${doctor.name}</h5>
-                            <small class="text-primary fw-medium">${doctor.specialization}</small>
+                    <div class="d-flex align-items-center mb-4 flex-wrap">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(doctor.name)}&background=e7f1ff&color=0d6efd" 
+                             class="rounded-circle mb-2 me-3" width="60" height="60" alt="Doctor" style="object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <h5 class="fw-800 mb-0 text-dark">${doctor.name}</h5>
+                            <span class="badge bg-primary bg-opacity-10 text-primary fw-bold" style="font-size: 0.7rem;">${doctor.specialization}</span>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    
+                    <div class="bg-light rounded-4 p-3 mb-4">
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted small"><i class="fas fa-hospital-alt me-1"></i> Department:</span>
-                            <span class="small fw-bold">${deptName}</span>
+                            <span class="text-muted small"><i class="fas fa-hospital-user me-1"></i> Dept:</span>
+                            <span class="small fw-800 text-dark">${deptName}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small"><i class="fas fa-door-open me-1"></i> Room:</span>
-                            <span class="small fw-bold">${doctor.roomNumber}</span>
+                            <span class="small fw-800 text-dark">${doctor.roomNumber}</span>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <span class="text-muted small"><i class="fas fa-circle me-1" style="font-size: 8px; vertical-align: middle;"></i> Status:</span>
-                            <span class="badge ${availabilityClass} status-badge">${availabilityText}</span>
+                            <span class="text-muted small"><i class="fas fa-signal me-1"></i> Status:</span>
+                            <span class="badge ${availabilityClass} rounded-pill px-3">${availabilityText}</span>
                         </div>
                     </div>
-                    <button class="btn btn-outline-primary w-100 fw-bold join-queue-btn" 
+                    
+                    <button class="btn btn-primary w-100 shadow-sm py-3 fw-bold join-queue-btn" 
                             data-doctor-id="${doctor.id}" 
                             data-doctor-name="${doctor.name}"
                             ${!isAvailable ? 'disabled' : ''}>
-                        <i class="fas fa-user-plus me-1"></i> Join Queue
+                        <i class="fas fa-plus-circle me-2"></i>Join Waitlist
                     </button>
                 </div>
             </div>

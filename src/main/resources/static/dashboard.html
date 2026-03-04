@@ -116,12 +116,12 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-5 dashboard-header">
             <div>
                 <h1 class="fw-800 mb-1">Hello, <span id="userName">Patient</span>! 👋</h1>
                 <p class="text-muted mb-0">Experience faster healthcare with real-time tracking.</p>
             </div>
-            <div class="d-flex align-items-center bg-white p-2 px-4 rounded-pill shadow-sm">
+            <div class="d-flex align-items-center bg-white p-2 px-4 rounded-pill shadow-sm user-info-pill">
                 <div class="me-3 text-end"><span class="fw-bold d-block" id="userDisplayId">ID: --</span><small
                         class="text-success fw-bold">Online</small></div>
                 <img id="headerProfilePic" src="https://ui-avatars.com/api/?name=Patient&background=0061ff&color=fff"
@@ -167,10 +167,10 @@
         </div>
 
         <!-- Search & Grid -->
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 search-filter-section">
             <h4 class="fw-800 mb-0">Join New Queue</h4>
-            <div class="d-flex gap-2">
-                <select id="deptFilter" class="form-select border-0 shadow-sm rounded-pill px-4" style="width: auto;">
+            <div class="d-flex gap-2 w-md-auto w-100 flex-column flex-md-row">
+                <select id="deptFilter" class="form-select border-0 shadow-sm rounded-pill px-4">
                     <option value="ALL">All Departments</option>
                     <option value="Cardiology">Cardiology</option>
                     <option value="Neurology">Neurology</option>
@@ -179,7 +179,7 @@
                 <div class="search-bar d-flex align-items-center">
                     <i class="fas fa-search text-muted me-3"></i>
                     <input type="text" id="doctorSearch" class="border-0 bg-transparent"
-                        style="outline: none; width: 250px;" placeholder="Search doctor or specialty...">
+                        style="outline: none; width: 100%;" placeholder="Search doctor...">
                 </div>
             </div>
         </div>
